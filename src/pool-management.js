@@ -4,10 +4,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const pool = mysql.createPool({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
+  host: process.env.RAILWAY_MYSQLHOST,
+  port: process.env.RAILWAY_PORT,
+  user: process.env.RAILWAY_MYSQLUSER,
+  password: process.env.RAILWAY_MYSQLPASSWORD,
+  database: process.env.RAILWAY_MYSQLDATABASE,
 }).promise();
 
 export default pool;
