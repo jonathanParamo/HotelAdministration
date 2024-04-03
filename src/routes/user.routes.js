@@ -6,7 +6,7 @@ import { resetPassword } from "../controllers/reset-password.controller.js";
 const router = Router();
 
 router.get("/", (req, res) => {
-  res.send("Hello Jonathan 👋");
+  res.send("Hello (☞ﾟヮﾟ)☞ Jonathan P. 👋");
 });
 
 router.post("/signup",  signupController);
