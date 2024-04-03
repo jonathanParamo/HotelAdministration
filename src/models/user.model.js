@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 import pool from "../pool-management.js";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 function validateEmail(email) {
-  const regex = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+  const regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
   return regex.test(email);
 }
 
@@ -31,11 +31,12 @@ export async function signupModel(Username, Password, Email) {
     const response = {
       success: true,
       message: 'Registration successful',
-      user: newUser[0],
+      user: {
+        ...newUser[0],
+        password: undefined,
+      },
       token,
     };
-
-    delete response.user.Password;
 
     return response;
   } catch (error) {
@@ -57,8 +58,9 @@ export async function signinModel(Password, Email) {
     }
 
     const isMatch = await bcrypt.compare(Password, existingUser.password);
+
     if (!isMatch) {
-      throw new Error('Invalid password.');
+      throw new Error('Invalid credentials. Please check your email and password.');
     }
 
     const token = generateToken(existingUser);
@@ -66,11 +68,12 @@ export async function signinModel(Password, Email) {
     const response = {
       success: true,
       message: 'Sign-in successful',
-      user: existingUser,
+      user: {
+        ...existingUser,
+        password: undefined,
+      },
       token,
     };
-
-    delete response.user.Password;
 
     return response;
   } catch (error) {
