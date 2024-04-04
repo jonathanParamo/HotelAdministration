@@ -31,7 +31,7 @@ export const sendMail = async ( recoveryEmail, token ) => {
     from: process.env.API_USER,
 
     to: recoveryEmail,
-    subjevt: 'Recovery password | Storage administration',
+    subjevt: 'Recovery password | Hotel',
     html: emailBody,
   };
 

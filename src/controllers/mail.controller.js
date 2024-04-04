@@ -1,9 +1,9 @@
 import pool from "../pool-management.js";
-import jwt from 'jsonwebtoken';
-import sendMail from "../mails/mails.js";
+import jwt from "jsonwebtoken";
+import { sendMail } from "../mails/mails.js";
 
 function validateEmail(email) {
-  const regex = /^\w+([.-_+]?\w+)*@\w+([.-]?\w+)*(\.\w{2,10})+$/;
+  const regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
   return regex.test(email);
 }
 
