@@ -2,7 +2,6 @@ import { signupModel, signinModel } from "../models/user.model.js";
 
 export async function signupController(req, res) {
   const { Username, Password, Email } = req.body;
-  console.log(Username, Password, Email);
 
   try {
     if (!Username || !Password || !Email) {
@@ -16,7 +15,6 @@ export async function signupController(req, res) {
     if (error.message === 'User with this email already exists.') {
       return res.status(409).json({ error: error.message });
     }
-    console.log(error);
     res.status(500).json({ error: 'Internal server error during signup.' });
   };
 };
