@@ -5,7 +5,6 @@ import pool from "../pool-management.js";
 export async function resetPassword(req, res) {
   try {
     const { body: { password, token } } = req;
-    console.log(password, token);
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
 
     if (!userId) {
@@ -25,7 +24,6 @@ export async function resetPassword(req, res) {
 
     res.status(201).json({ message: 'Password successfully updated' });
   } catch (error) {
-    console.error(error);
     res.status(400).json({ message: error.message });
   }
 }
