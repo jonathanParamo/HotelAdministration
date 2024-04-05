@@ -43,4 +43,51 @@ export async function createRoomModel({
   } catch (error) {
     throw error;
   }
+};
+
+export async function editRoomModel({
+  room_number,
+  max_occupancy,
+  number_of_beds,
+  status,
+  price_per_night,
+  price_per_hour,
+  room_photo1,
+  room_photo2,
+  room_photo3,
+  room_photo4,
+}) {
+  const [existingRooms] = await pool.query('SELECT * FROM rooms WHERE room_number = ?', [room_number]);
+
+  if (existingRooms.length === 0) {
+    throw new Error('Room with this number does not exist.');
+  }
+
+  const query = `
+    UPDATE rooms
+    SET max_occupancy = ?, number_of_beds = ?, status = ?, price_per_night = ?, price_per_hour = ?, room_photo1 = ?, room_photo2 = ?, room_photo3 = ?, room_photo4 = ?
+    WHERE room_number = ?`;
+
+  const values = [max_occupancy, number_of_beds, status, price_per_night, price_per_hour, room_photo1, room_photo2, room_photo3, room_photo4, room_number];
+
+  const [result] = await pool.query(query, values);
+
+  if (result.affectedRows === 0) {
+    throw new Error('Failed to update the room.');
+  }
+
+  const updatedRoom = {
+    room_number,
+    max_occupancy,
+    number_of_beds,
+    status,
+    price_per_night,
+    price_per_hour,
+    room_photo1,
+    room_photo2,
+    room_photo3,
+    room_photo4,
+  };
+
+  return updatedRoom;
 }
