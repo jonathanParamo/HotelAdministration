@@ -19,7 +19,7 @@ export async function createRoomModel({
       throw new Error('Room with this number already exists.');
     }
 
-    const query = 'INSERT INTO rooms (room_number, max_occupancy, number_of_beds, status, price_per_night, price_per_hour room_photo1, room_photo2, room_photo3, room_photo4,) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO rooms (room_number, max_occupancy, number_of_beds, status, price_per_night, price_per_hour, room_photo1, room_photo2, room_photo3, room_photo4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const values = [room_number, max_occupancy, number_of_beds, status, price_per_night, price_per_hour, room_photo1, room_photo2, room_photo3, room_photo4,];
     const [result] = await pool.query(query, values);
 
@@ -90,4 +90,25 @@ export async function editRoomModel({
   };
 
   return updatedRoom;
+}
+
+export async function deleteRoomModel(room_number) {
+  try {
+    const [existingRoom] = await pool.query('SELECT * FROM rooms WHERE room_number = ?', [room_number]);
+
+    if (existingRoom.length === 0) {
+      throw new Error('Cannot find a room with this number');
+    }
+
+    const deleteQuery = 'DELETE FROM rooms WHERE room_number = ?';
+    const [deleteResult] = await pool.query(deleteQuery, [room_number]);
+
+    if (deleteResult.affectedRows === 0) {
+      throw new Error('Failed to delete the room.');
+    }
+
+    return { success: true, message: 'Room deleted successfully.', room_number: room_number };
+  } catch (error) {
+    throw error;
+  }
 }
