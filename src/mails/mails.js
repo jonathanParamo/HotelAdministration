@@ -37,5 +37,4 @@ export const sendMail = async ( recoveryEmail, token ) => {
 
   const transport = nodemailer.createTransport(config);
   await transport.sendMail(message);
-
 };

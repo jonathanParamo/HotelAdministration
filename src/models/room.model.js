@@ -25,6 +25,7 @@ export async function createRoomModel({
 
     if (result.affectedRows === 1) {
       const createdRoom = {
+        room_id: result.insertId,
         room_number,
         max_occupancy,
         number_of_beds,
@@ -34,14 +35,14 @@ export async function createRoomModel({
         room_photo1,
         room_photo2,
         room_photo3,
-        room_photo4
+        room_photo4,
       };
       return createdRoom;
     } else {
       throw new Error('Failed to create room.');
     }
   } catch (error) {
-    throw error;
+    throw new Error(error);
   }
 };
 
@@ -90,7 +91,7 @@ export async function editRoomModel({
   };
 
   return updatedRoom;
-}
+};
 
 export async function deleteRoomModel(room_number) {
   try {
@@ -111,4 +112,4 @@ export async function deleteRoomModel(room_number) {
   } catch (error) {
     throw error;
   }
-}
+};

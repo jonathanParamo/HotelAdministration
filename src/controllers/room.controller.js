@@ -35,7 +35,7 @@ export async function createRoomController(req, res) {
     return res.status(201).json({ success: true, room: createdRoom });
   } catch (error) {
 
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: error.message });
   }
 };
 
