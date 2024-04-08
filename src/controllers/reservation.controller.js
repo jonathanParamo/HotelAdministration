@@ -25,6 +25,8 @@ export async function createReservationController(req, res) {
       room_number
     });
 
+    const { reservation_id } = createReservation;
+
     const pdfPath = createReservationPDF({
       reservation_id,
       room_number,
