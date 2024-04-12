@@ -4,7 +4,6 @@ import { createReservationPDF } from "../pdf/reservation.pdf.js";
 
 export async function createReservationController(req, res) {
   const {
-    reservation_id,
     user_id,
     room_id,
     start_date,
@@ -27,7 +26,7 @@ export async function createReservationController(req, res) {
 
     const { reservation_id } = createReservation;
 
-    const pdfPath = createReservationPDF({
+    const pdfBuffer = await createReservationPDF({
       reservation_id,
       room_number,
       name: name,
@@ -35,9 +34,11 @@ export async function createReservationController(req, res) {
       end_date
     });
 
-    await sendReservation(email, pdfPath);
+    await sendReservation(email, pdfBuffer);
 
-    return res.status(201).json({ success: true, reservation: createReservation })
+    res.set('Content-Disposition', 'attachment; filename="reservation.pdf"');
+    res.set('Content-Type', 'application/pdf');
+    res.send(pdfBuffer);
   } catch (error) {
     return res.status(500).json({ error: error.message })
   }

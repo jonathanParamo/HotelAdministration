@@ -1,6 +1,11 @@
 import nodemailer from "nodemailer";
+import fs from "fs";
+import { v4 as uuidv4 } from 'uuid';
 
-export async function sendReservation(email, pdfPath) {
+export async function sendReservation(email, pdfBuffer) {
+  const tempFileName = `reservation_${uuidv4()}.pdf`;
+  fs.writeFileSync(tempFileName, pdfBuffer);
+
   const config = {
     host: 'smtp.gmail.com',
     port: 587,
@@ -25,10 +30,12 @@ export async function sendReservation(email, pdfPath) {
     html: emailBody,
     attachments: [{
       filename: 'reservation.pdf',
-      path: pdfPath
+      path: tempFileName
     }]
   };
 
   const transporter = nodemailer.createTransport(config);
   await transporter.sendMail(message);
+
+  fs.unlinkSync(tempFileName);
 };
