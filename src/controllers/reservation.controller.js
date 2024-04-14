@@ -1,4 +1,7 @@
-import { createReservationModel } from "../models/reservation.model.js"
+import {
+  createReservationModel,
+  editReservationModel
+} from "../models/reservation.model.js"
 import { sendReservation } from "../mails/reservation.mail.js";
 import { createReservationPDF } from "../pdf/reservation.pdf.js";
 
@@ -43,3 +46,48 @@ export async function createReservationController(req, res) {
     return res.status(500).json({ error: error.message })
   }
 };
+
+export async function editReservationController(req, res) {
+  try {
+    const {
+      user_id,
+      room_id,
+      start_date,
+      end_date,
+      status,
+      room_number,
+      email,
+      name,
+      reservation_id
+    } = req.body;
+
+    const editReservation = await editReservationModel({
+      user_id,
+      room_id,
+      start_date,
+      end_date,
+      status,
+      room_number,
+      reservation_id
+    });
+
+    if (editReservation) {
+      const pdfBuffer = await createReservationPDF({
+        reservation_id: editReservation.reservation_id,
+        room_number: editReservation.room_number,
+        name,
+        start_date: editReservation.start_date,
+        end_date: editReservation.end_date
+      });
+      return pdfBuffer;
+    }
+
+    await sendReservation(email, pdfBuffer);
+
+    res.set('Content-Disposition', 'attachment; filename="reservation.pdf"');
+    res.set('Content-Type', 'application/pdf');
+    res.send(pdfBuffer);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
