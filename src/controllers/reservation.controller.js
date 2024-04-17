@@ -1,9 +1,11 @@
 import {
   createReservationModel,
-  editReservationModel
+  editReservationModel,
+  cancelReservationModel
 } from "../models/reservation.model.js"
 import { sendReservation } from "../mails/reservation.mail.js";
 import { createReservationPDF } from "../pdf/reservation.pdf.js";
+import { sendCancellationEmail } from "../mails/cancellation.mail.js";
 
 export async function createReservationController(req, res) {
   const {
@@ -90,4 +92,23 @@ export async function editReservationController(req, res) {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-}
+};
+
+export async function cancelReservationController(req, res) {
+  try {
+    const {
+      email,
+      reservation_id
+    } = req.body;
+
+    const cancelReservation = await cancelReservationModel({
+      reservation_id
+    });
+
+    await sendCancellationEmail(email);
+
+    res.status(200).send(cancelReservation);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};

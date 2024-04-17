@@ -110,4 +110,34 @@ export async function editReservationModel({
   } catch (error) {
     throw new Error(`Error in updating the reservation: ${error.message}`);
   }
-}
+};
+
+export async function cancelReservationModel({ reservation_id }) {
+  try {
+    if (!reservation_id) throw new Error('Your reservation number has not provide');
+
+    const [existingReservation] = await pool.query('SELECT * FROM reservations WHERE reservation_id = ?', reservation_id);
+
+    if (existingReservation.length === 0) {
+      throw new Error('Your reservation number is not valid');
+    }
+
+    const room_id = existingReservation[0].room_id;
+
+    // Delete the reservation
+    const deleteResult = await pool.query('DELETE FROM reservations WHERE reservation_id = ?', reservation_id);
+    if (deleteResult.affectedRows === 0) {
+      throw new Error('Failed to cancel reservation');
+    }
+
+    // Update the room status to set it as 'available'
+    const updateRoomResult = await pool.query('UPDATE rooms SET status = ? WHERE room_id = ?', ['available', room_id]);
+    if (updateRoomResult.affectedRows === 0) {
+      throw new Error('Failed to update room status');
+    }
+
+    return { message: 'Reservation cancelled and room status updated successfully.' };
+  } catch (error) {
+    throw new Error(`Error in cancelling the reservation: ${error.message}`);
+  }
+};
