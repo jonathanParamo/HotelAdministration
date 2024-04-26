@@ -3,6 +3,7 @@ import morgan from "morgan";
 import userRoute from "./routes/user.routes.js";
 import roomRoute from "./routes/room.routes.js";
 import reservationRoute from "./routes/reservation.routes.js";
+import cleaningHistory from "./routes/cleaningHistory.routes.js"
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.use(express.json());
 app.use(userRoute)
 app.use(roomRoute)
 app.use(reservationRoute)
+app.use(cleaningHistory)
 
 export default app;
