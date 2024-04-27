@@ -4,6 +4,9 @@ import userRoute from "./routes/user.routes.js";
 import roomRoute from "./routes/room.routes.js";
 import reservationRoute from "./routes/reservation.routes.js";
 import cleaningHistory from "./routes/cleaningHistory.routes.js"
+import "./task/completedReservation.task.js";
+import "./task/cleaningRoom.task.js";
+import "./task/reservations.task.js";
 
 const app = express();
 

@@ -14,7 +14,12 @@ async function markRoomForCleaning(roomId) {
 
 async function checkReservationsForCleaning() {
   try {
-    const query = "SELECT * FROM reservations INNER JOIN rooms ON reservations.room_id = rooms.room_id WHERE reservations.end_time < NOW() AND rooms.status != 'cleaning_required'";
+    const query = `
+      SELECT *
+      FROM reservations
+      INNER JOIN rooms ON reservations.room_id = rooms.room_id
+      WHERE reservations.end_time < NOW() AND rooms.status != 'cleaning_required'
+    `;
     const [results] = await pool.query(query);
 
     const cleaningResponses = [];
